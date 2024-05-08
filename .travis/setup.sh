@@ -28,6 +28,11 @@ setup_php() {
     fi
 }
 
+# add a hostname
+add_hostname() {
+    sudo echo '127.0.0.1 cypht-test.org' >> /etc/hosts
+}
+
 # Add a system user dovecot will use for authentication
 setup_user() {
     sudo useradd -m -d /home/testuser -p '$1$BMvnSsOY$DXbm292ZTfTwuEwUpu/Lo/' testuser
@@ -219,6 +224,7 @@ setup_ui_tests() {
     setup_cypht
     #install_sodium
     setup_user
+    add_hostname
     install_dovecot
     selenium_config
     install_selenium
@@ -231,6 +237,7 @@ setup_all_tests() {
     setup_php
     setup_memcached
     setup_user
+    add_hostname
     install_dovecot
     selenium_config
     setup_cypht
@@ -246,11 +253,11 @@ setup_all_tests() {
 BUILD="$DB$TRAVIS_PHP_VERSION"
 case "$BUILD" in
     postgresql8.1)
-        #setup_all_tests
-        setup_unit_tests
+        setup_all_tests
+        # setup_unit_tests
     ;;
     *)
-        setup_unit_tests
+        setup_all_tests
     ;;
 esac
 sys_info
